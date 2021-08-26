@@ -1,0 +1,59 @@
+version: "3.0"
+services:
+
+  elasticsearch:
+    container_name: es-container
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
+    environment:
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
+    networks:
+      - es-net
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
+  kibana:
+    container_name: kb-container
+    image: docker.elastic.co/kibana/kibana:7.12.1
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es-container:9200
+    networks:
+      - es-net
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+
+  postgres:
+    container_name: postgres-container
+    image: postgres
+    environment:
+      - POSTGRES_DB=idl
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - database-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  pgadmin:
+    container_name: pgadmin-container
+    image: dpage/pgadmin4
+    depends_on: 
+      - postgres
+    ports:
+      - 5050:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: yasir@yasir.com
+      PGADMIN_DEFAULT_PASSWORD: admin   
+
+networks:
+  es-net:
+    driver: bridge
+
+volumes:
+  data01:
+    driver: local
+  database-data:  
