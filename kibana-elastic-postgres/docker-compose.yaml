@@ -1,5 +1,6 @@
 version: "3.0"
 services:
+
   elasticsearch:
     container_name: es-container
     image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
@@ -12,6 +13,7 @@ services:
       - data01:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
+
   kibana:
     container_name: kb-container
     image: docker.elastic.co/kibana/kibana:7.12.1
@@ -24,7 +26,7 @@ services:
     ports:
       - 5601:5601
 
-  db:
+  postgres:
     container_name: postgres-_container
     image: postgres
     environment:
@@ -36,6 +38,16 @@ services:
     ports:
       - 5432:5432
 
+  pgadmin:
+    image: dpage/pgadmin4
+    depends_on: 
+      - postgres
+    ports:
+      - 53603:53603
+    environment:
+      PGADMIN_DEFAULT_EMAIL: yasir@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin   
+
 networks:
   es-net:
     driver: bridge
@@ -44,4 +56,3 @@ volumes:
   data01:
     driver: local
   database-data:  
-
