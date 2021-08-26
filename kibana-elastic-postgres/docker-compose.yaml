@@ -38,16 +38,6 @@ services:
     ports:
       - 5432:5432
 
-  pgadmin:
-    image: dpage/pgadmin4
-    depends_on: 
-      - postgres
-    ports:
-      - 53603:53603
-    environment:
-      PGADMIN_DEFAULT_EMAIL: yasir@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin   
-
 networks:
   es-net:
     driver: bridge
